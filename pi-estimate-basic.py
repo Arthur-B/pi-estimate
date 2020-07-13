@@ -10,6 +10,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
 sns.set()
+colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
 
 import time
 import pandas as pd
@@ -25,10 +26,16 @@ def linear(nbPoints):
     piApprox = 4 * countIn / nbPoints
     return piApprox
 
-# Prepare series for computing time and error
+
+#==============================================================================
+# Computing
+#==============================================================================
+    
+#------------------------------------------------------------------------------
+# Prepare dataframe for computing time and error
 
 lsTry = [i for i in range(20)]
-lsPointsTry = np.power(10, [i for i in range(6)])
+lsPointsTry = np.power(10, [i for i in range(3)])
 
 index = pd.MultiIndex.from_product([lsPointsTry, lsTry],
                                    names=["Points", "Try"])
@@ -36,19 +43,9 @@ index = pd.MultiIndex.from_product([lsPointsTry, lsTry],
 df = pd.DataFrame(data=np.zeros((len(index),2)),
                   index=index, columns=['Time (s)', 'Error'])
 
-# Prepare figure
 
-# fig1, axs1 = plt.subplots(1,2)
-# circle = matplotlib.patches.Circle((0,0), radius=0.5,
-#                                    alpha=0.5,
-#                                    edgecolor='k')
-# axs1[0].add_patch(circle)
-# axs1[0].set(aspect="equal", 
-#             xlim=[-0.55,0.55], ylim=[-0.55,0.55],
-#             xticks=[-0.5,0,0.5], yticks=[-0.5,0,0.5],
-#             xlabel='x', ylabel='y')
-
-# Linear, brute, understandable but maybe not efficient
+#------------------------------------------------------------------------------
+# Computations
 
 for ind in index:
     t = time.time()
@@ -58,9 +55,15 @@ for ind in index:
     
     df['Error'].loc[ind] = np.abs(piApprox - np.pi)
     df['Time (s)'][ind]  = time.time() - t
-    
-# Figure
 
+
+#==============================================================================
+# Figures
+#==============================================================================
+
+#------------------------------------------------------------------------------
+# Time and error
+    
 fig1, axs1 = plt.subplots(1,2, figsize=(10,4))
 axs1[0].set(xscale='log', yscale='log')
 axs1[1].set(xscale='log', yscale='log')
@@ -68,6 +71,41 @@ sns.lineplot(x='Points', y='Time (s)', data=df.reset_index(), ax=axs1[0])
 sns.lineplot(x='Points', y='Error', data=df.reset_index(), ax=axs1[1])
 
 plt.tight_layout()
+
+
+#------------------------------------------------------------------------------
+# Visualization
+
+# points
+
+nbPointsVisualization = 2000
+df_visualization = pd.DataFrame(data=np.random.rand(nbPointsVisualization,2) * 2 - 1,
+                                columns=['x','y'])
+df_visualization['norm'] = np.sqrt(df_visualization['x']**2 + df_visualization['y']**2)
+df_visualization['Inside circle'] = df_visualization['norm'] < 1
+
+# Figure
+
+fig2, ax2 = plt.subplots()
+circle = matplotlib.patches.Circle((0,0), radius=1,
+                                    alpha=0.1,
+                                    edgecolor=colors[1],
+                                    facecolor=colors[1])
+ax2.add_patch(circle)
+ax2.set(aspect="equal", 
+            xlim=[-1.1,1.1], ylim=[-1.1,1.1],
+            xticks=[-1,0,1], yticks=[-1,0,1],
+            xlabel='x', ylabel='y')
+
+# title= 'Number of points: %i' % nbPointsVisualization
+
+sns.scatterplot(x='x', y='y', data=df_visualization, hue='Inside circle')
+ax2.legend().remove()
+
+
+#------------------------------------------------------------------------------
+# Show
+
 plt.show()
 
     

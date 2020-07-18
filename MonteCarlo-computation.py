@@ -3,6 +3,11 @@
 Created on Mon Jul 13 19:29:03 2020
 
 @author: Arthur
+
+Brute gets linear from the start
+Numpy gets linear from 1e5 points
+
+Test: Numpy in batch, maybe processed in parallel
 """
 
 import numpy as np
@@ -16,9 +21,16 @@ import time
 import pandas as pd
 
 
-nbTry = 5  
-maxPower = 4  
+nbTry = 20  
+maxPower = 6
 
+# Total runtime
+# 1e3: 1 s
+# 1e4: 2.6 s
+# 1e5: 17.7 s
+# 1e6:
+
+t_tot = time.time()
 
 #==============================================================================
 # Prepare dataframes for storage of time and error
@@ -69,7 +81,7 @@ for nbPoints_ind in lsPointsTry:
         
     
 #==============================================================================
-# 2) thinking a bit: 
+# 2) thinking a bit: Numpy vector operations
 #==============================================================================
     
 #------------------------------------------------------------------------------
@@ -83,11 +95,6 @@ def directNumpy(nbPoints):
     piApprox = 4 * nbIn / nbPoints
     error = np.abs(piApprox - np.pi)
     return piApprox, error
-
-#==============================================================================
-# 2) thinking more: 
-#==============================================================================
- 
 
 #------------------------------------------------------------------------------
 # Calculations
@@ -107,21 +114,29 @@ for nbPoints_ind in lsPointsTry:
   
 fig1, axs1 = plt.subplots(1,2, figsize=(10,4))
 
-axs1[0].set(xscale='log', yscale='log')
-axs1[1].set(xscale='log', yscale='log')
-sns.lineplot(data=df_time, ax=axs1[0])
-sns.lineplot(data=df_error.droplevel('Try'), ax=axs1[1])
+sns.lineplot(data=df_time, ax=axs1[0], 
+             dashes=False, markers=True)
+axs1[0].set(xscale='log', yscale='log', ylabel='Time (s)')
+
+sns.lineplot(data=df_error.droplevel('Try'), ax=axs1[1],
+             dashes=False, markers=True)
+axs1[1].set(xscale='log', yscale='log', ylabel='Error')
 
 plt.tight_layout()
 
 plt.show()
 
+
 #==============================================================================
 # Save
 #==============================================================================
 
-# df.to_hdf('.\data\data.h5', key='df')
-# df.to_hdf('.\data\data.h5', key='df_points')
+t_tot = time.time() - t_tot
+print(t_tot)
+
+# df_time.to_hdf('.\data\data_MonteCarlo.h5', key='df_time')
+# df_error.to_hdf('.\data\data_MonteCarlo.h5', key='df_error',
+#                 mode='w')
     
     
     

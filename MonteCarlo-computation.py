@@ -22,13 +22,14 @@ import pandas as pd
 
 
 nbTry = 20  
-maxPower = 6
+maxPower = 7
 
 # Total runtime
-# 1e3: 1 s
-# 1e4: 2.6 s
-# 1e5: 17.7 s
-# 1e6:
+# 1e3: All, 1 s | Numpy only,
+# 1e4: 2.6 s | 0.76
+# 1e5: 17.7 s | 1.1
+# 1e6: | 1.9
+# 1e7: | 12.5
 
 t_tot = time.time()
 
@@ -53,31 +54,31 @@ df_error = pd.DataFrame(data=np.zeros((len(index),2)),
 # 1) Brute method: linear
 #==============================================================================
 
-#------------------------------------------------------------------------------
-# Function
+# #------------------------------------------------------------------------------
+# # Function
 
-def linear(nbPoints):
-    countIn = 0
+# def linear(nbPoints):
+#     countIn = 0
 
-    for n in range(nbPoints):
-        val = np.random.rand(2) * 2 - 1
-        if np.linalg.norm(val) < 1:
-            countIn +=1
+#     for n in range(nbPoints):
+#         val = np.random.rand(2) * 2 - 1
+#         if np.linalg.norm(val) < 1:
+#             countIn +=1
     
-    piApprox = 4 * countIn / nbPoints
-    error = np.abs(piApprox - np.pi)
-    return piApprox, error
+#     piApprox = 4 * countIn / nbPoints
+#     error = np.abs(piApprox - np.pi)
+#     return piApprox, error
 
-#------------------------------------------------------------------------------
-# Computations
+# #------------------------------------------------------------------------------
+# # Computations
     
-for nbPoints_ind in lsPointsTry:
-    t = time.time()
-    for nbTry_ind in lsTry:
-        piApprox, error = linear(nbPoints_ind)
-        df_error['Brute'].loc[nbPoints_ind, nbTry_ind] = error
-    t = time.time() - t
-    df_time['Brute'].loc[nbPoints_ind]  = t / nbTry
+# for nbPoints_ind in lsPointsTry:
+#     t = time.time()
+#     for nbTry_ind in lsTry:
+#         piApprox, error = linear(nbPoints_ind)
+#         df_error['Brute'].loc[nbPoints_ind, nbTry_ind] = error
+#     t = time.time() - t
+#     df_time['Brute'].loc[nbPoints_ind]  = t / nbTry
         
     
 #==============================================================================
@@ -131,8 +132,15 @@ plt.show()
 # Save
 #==============================================================================
 
+
+df = pd.DataFrame(data={'Time': df_time['Numpy'],
+                        'Error': df_error['Numpy'].mean(level='Number of points')})
+df = df.reset_index()
+
 t_tot = time.time() - t_tot
 print(t_tot)
+
+# df.to_hdf('.\data\data_MonteCarlo2.h5', key='df')
 
 # df_time.to_hdf('.\data\data_MonteCarlo.h5', key='df_time')
 # df_error.to_hdf('.\data\data_MonteCarlo.h5', key='df_error',

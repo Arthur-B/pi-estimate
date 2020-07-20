@@ -17,7 +17,10 @@ import time
 colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
 
 nbTry = 20  
-maxPower = 6
+maxPower = 3
+
+t_tot = time.time()
+
 lsPointsTry = np.power(10, [i for i in range(maxPower + 1)])
 
 df = pd.DataFrame(data=np.zeros((len(lsPointsTry),3)),
@@ -63,10 +66,20 @@ axs1[0].set(xscale='log', yscale='log',
             xlabel='Number of points', ylabel='Time (s)')
 
 sns.lineplot(x='Number of points', y='Error', data=df, ax=axs1[1],
-             dashes=False, markers=True)
+              dashes=False, markers=True)
 axs1[1].set(xscale='log', yscale='log', 
             xlabel='Number of points',ylabel='Error')
 
 plt.tight_layout()
 
 plt.show()
+
+
+#==============================================================================
+# Save
+#==============================================================================
+
+t_tot = time.time() - t_tot
+print(t_tot)
+
+# df.to_hdf('.\data\data_arcLength.h5', key='df')

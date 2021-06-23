@@ -2,42 +2,48 @@
 
 Estimate the value of Pi via different methods.
 
-## Starting Point: Monte-Carlo Method
+# Starting Point: Monte-Carlo Method
 
 <p align="center">
-<img src="images/2000.png">
+<img src="images/mc.gif">
 </p>
 
-## Polygonal algorithm
+# Polygonal algorithms
+
+## Arc length
+
+<p align="center">
+<img src="images/al.gif">
+</p>
 
 Approximating the perimeter of the circle by the length of segments
 
-### Equally spaced x
+## Archimedes
 
-$$
-P_{Circle} = 2\pi t \eq
-$$
+## Liu Hui
 
-### Equally spaced $$\theta$$
 
-Do not need to make a sum, just compute one and multiply by the number of segments.
-But maybe assumed prior knowledge of $$\pi$$ when determining $$\theta?
-
-## Infinite series
+# Infinite series
 
 Viete, Wallis, Madhava-Gregory-Leibniz, Newton, Nilakantha
 
 Computer era: inverse arctan series
 
-## Iterative algorithms
+# Iterative algorithms
 
 Karatsuba algorithm, Tom-Cook multiplication, Fourier transform-based methods.
 
 Arithmetic-geometric mean method (Gauss-Legendre algorithm)
 
-## Chudnovsky algorithm
+# Chudnovsky algorithm
 
-## To-do
+# To-do
+
+* More geometric methods
+  * Polygon approximation (Archimedes) (perimeter)
+  * [Liu Hui](https://en.wikipedia.org/wiki/Liu_Hui%27s_%CF%80_algorithm) (area)
+  * Is my arc length version m
+
 
 * Deeper error vs number of points, save the data.
 * Compare speed of different points generation method
